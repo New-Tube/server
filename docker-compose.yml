@@ -9,10 +9,30 @@ services:
     labels:
       - "traefik.http.routers.docs.rule=Host(`docs.miko089.ru`)"
 
+  postgresql:
+    image: postgres:16.1
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: new-tube
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    
+    volumes:
+      - /home/new-tube/new-tube/db_data:/var/lib/postgresql/data
+
+  internal-api:
+    image: miko089.ru/internal-api:latest
+    restart: always
+    ports:
+      - 5050:5050
+
   reverse-proxy:
     image: traefik:v2.10
-    command: --providers.docker
+    command: --api.insecure=true --providers.docker
     ports:
       - "80:80"
+      - "12:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
