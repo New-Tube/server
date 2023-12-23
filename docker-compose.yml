@@ -27,6 +27,8 @@ services:
     restart: always
     ports:
       - 5050:5050
+    labels:
+      - "traefik.http.routers.docs.rule=Host(`internal.miko089.ru:5050`)"
 
   reverse-proxy:
     image: traefik:v2.10
