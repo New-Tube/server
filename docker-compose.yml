@@ -18,7 +18,8 @@ services:
       POSTGRES_USER: new-tube
       POSTGRES_PASSWORD: password
       PGDATA: /var/lib/postgresql/data/pgdata
-    
+    labels:
+      - "traefik.http.routers.database.rule=Host(`database:5432`)"
     volumes:
       - /home/new-tube/new-tube/db_data:/var/lib/postgresql/data
 
@@ -29,6 +30,8 @@ services:
       - 5050:5050
     labels:
       - "traefik.http.routers.internal.rule=Host(`internal-api:5050`)"
+    volumes:
+      - /home/new-tube/new-tube/internal-api/.env:/app/.env
 
   test-client-internal-api:
     image: miko089.ru/test-internal-api:latest
