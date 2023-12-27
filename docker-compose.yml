@@ -2,12 +2,12 @@ version: '3'
 
 services:                       
   docs:
-    image: miko089.ru/docs:latest
+    image: new-tube.ru/docs:latest
     restart: always
     ports:
-      - 8888:80
+      - 8001:80
     labels:
-      - "traefik.http.routers.docs.rule=Host(`docs.miko089.ru`)"
+      - "traefik.http.routers.docs.rule=Host(`docs.new-tube.ru`)"
 
   postgresql:
     image: postgres:16.1
@@ -24,7 +24,7 @@ services:
       - /home/new-tube/new-tube/db_data:/var/lib/postgresql/data
 
   internal-api:
-    image: miko089.ru/internal-api:latest
+    image: new-tube.ru/internal-api:latest
     restart: always
     ports:
       - 5050:5050
@@ -33,21 +33,13 @@ services:
     volumes:
       - /home/new-tube/new-tube/server/.env:/app/.env
 
-  test-client-internal-api:
-    image: miko089.ru/test-internal-api:latest
-    restart: always
-    ports:
-      - 5000:8080
-    labels:
-      - "traefik.http.routers.test.rule=Host(`test.miko089.ru:5000`)"
-
   regular-user-web-interface:
-    image: miko089.ru/regular-user-web-interface:latest
+    image: new-tube.ru/regular-user-web-interface:latest
     restart: always
     ports:
-      - 9999:8080
+      - 8002:8080
     labels:
-      - "traefik.http.routers.new-tube.rule=Host(`new-tube.miko089.ru`)"
+      - "traefik.http.routers.regular-user-web.rule=Host(`new-tube.ru`)"
 
   reverse-proxy:
     image: traefik:v2.10
@@ -58,3 +50,26 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
+  registry:
+  restart: always
+  image: registry:2
+  ports:
+    - 8003:443
+
+  labels:
+    - "traefik.http.routers.registry.rule=Host(`registry.new-tube.ru`)"
+    - "traefik.http.routers.myrouter.tls=true"
+
+  environment:
+    REGISTRY_HTTP_ADDR: 0.0.0.0:443
+    REGISTRY_HTTP_TLS_CERTIFICATE: /certs/registry.new-tube.fullchain.pem
+    REGISTRY_HTTP_TLS_KEY: /certs/registry.new-tube.key.pem
+      
+    REGISTRY_AUTH: htpasswd
+    REGISTRY_AUTH_HTPASSWD_REALM: "Registry Realm"
+    REGISTRY_AUTH_HTPASSWD_PATH: /config/htpasswd
+
+  volumes:
+    - /home/new-tube/new-tube/server/certs:/certs
+    - /home/new-tube/new-tube/server/registry:/var/lib/registry
+    - /home/new-tube/new-tube/server/config:/config
