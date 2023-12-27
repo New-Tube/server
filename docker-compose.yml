@@ -2,7 +2,7 @@ version: '3'
 
 services:                       
   docs:
-    image: new-tube.ru/docs:latest
+    image: new-tube.ru:6000/docs:latest
     restart: always
     ports:
       - 8001:80
@@ -24,7 +24,7 @@ services:
       - /home/new-tube/new-tube/db_data:/var/lib/postgresql/data
 
   internal-api:
-    image: new-tube.ru/internal-api:latest
+    image: new-tube.ru:6000/internal-api:latest
     restart: always
     ports:
       - 5050:5050
@@ -34,7 +34,7 @@ services:
       - /home/new-tube/new-tube/server/.env:/app/.env
 
   regular-user-web-interface:
-    image: new-tube.ru/regular-user-web-interface:latest
+    image: new-tube.ru:6000/regular-user-web-interface:latest
     restart: always
     ports:
       - 8002:8080
