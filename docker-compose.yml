@@ -41,6 +41,14 @@ services:
     labels:
       - "traefik.http.routers.test.rule=Host(`test.miko089.ru:5000`)"
 
+  regular-user-web-interface:
+    image: miko089.ru/regular-user-web-interface:latest
+    restart: always
+    ports:
+      - 80:8080
+    labels:
+      - "traefik.http.routers.docs.rule=Host(`new-tube.miko089.ru`)"
+
   reverse-proxy:
     image: traefik:v2.10
     command: --api.insecure=true --providers.docker
@@ -49,3 +57,4 @@ services:
       - "12:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
