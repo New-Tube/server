@@ -45,9 +45,9 @@ services:
     image: miko089.ru/regular-user-web-interface:latest
     restart: always
     ports:
-      - 80:8080
+      - 9999:8080
     labels:
-      - "traefik.http.routers.docs.rule=Host(`new-tube.miko089.ru`)"
+      - "traefik.http.routers.new-tube.rule=Host(`new-tube.miko089.ru`)"
 
   reverse-proxy:
     image: traefik:v2.10
