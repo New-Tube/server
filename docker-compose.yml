@@ -62,8 +62,6 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     labels:
       - "traefik.http.routers.database.rule=Host(`database.dev.new-tube.ru:5432`)"
-    volumes:
-      - /home/new-tube/new-tube/db_data:/var/lib/postgresql/data
 
   internal-api-dev:
     image: new-tube.ru:6000/internal-api:latest
