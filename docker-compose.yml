@@ -55,7 +55,7 @@ services:
     image: postgres:16.1
     restart: always
     ports:
-      - 5433:5432
+      - 4001:5432
     environment:
       POSTGRES_USER: new-tube
       POSTGRES_PASSWORD: password
@@ -67,7 +67,7 @@ services:
     image: new-tube.ru:6000/internal-api:latest
     restart: always
     ports:
-      - 5051:5050
+      - 4000:5050
     labels:
       - "traefik.http.routers.internal-dev.rule=Host(`internal-api.dev.new-tube.ru:4000`)"
     volumes:
