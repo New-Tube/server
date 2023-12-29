@@ -49,3 +49,28 @@ services:
       - "12:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+
+  postgresql-dev:
+    image: postgres:16.1
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: new-tube
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    labels:
+      - "traefik.http.routers.database.rule=Host(`database.dev.new-tube.ru:5432`)"
+    volumes:
+      - /home/new-tube/new-tube/db_data:/var/lib/postgresql/data
+
+  internal-api-dev:
+    image: new-tube.ru:6000/internal-api:latest
+    restart: always
+    ports:
+      - 5051:5050
+    labels:
+      - "traefik.http.routers.internal.rule=Host(`internal-api.dev.new-tube.ru:5050`)"
+    volumes:
+      - /home/new-tube/new-tube/server/.env.dev:/app/.env
